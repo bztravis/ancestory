@@ -52,9 +52,9 @@ const AudioVisualizer = () => {
 
       // Draw the circle
       const radius = averageVolume; // Adjust as needed
-      conso;
+      console.log(radius);
       ctx.beginPath();
-      ctx.arc(canvas.width / 4, canvas.height / 4, radius, 0, 2 * Math.PI);
+      ctx.arc(canvas.width / 2, canvas.height / 2, radius, 0, 2 * Math.PI);
       ctx.fill();
     }
 

@@ -10,21 +10,19 @@ type Props = {
 
 const Page = ({ params }: Props) => {
   const [recording, setRecording] = useState<boolean>(false);
-  const [permission, setPermission] = useState<boolean>(false);
-  const [stream, setStream] = useState<MediaStream | null>(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const [audio, setAudio] = useState<string | null>(null);
 
-  const getMicPerm = async () => {
+  const getStream = async () => {
+    console.log('perm');
     if ('MediaRecorder' in window) {
       try {
         const streamData = await window.navigator.mediaDevices.getUserMedia({
           audio: true,
           video: false,
         });
-        setPermission(true);
-        setStream(streamData);
+        return streamData;
       } catch (err) {
         console.error(err);
       }
@@ -33,16 +31,13 @@ const Page = ({ params }: Props) => {
     }
   };
 
-  const startRecording = () => {
-    if (!permission) {
-      getMicPerm();
-      return;
-    }
+  const startRecording = async () => {
+    const streamData = await getStream();
 
-    if (!stream) return;
+    if (!streamData) return;
 
     setRecording(true);
-    const media = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+    const media = new MediaRecorder(streamData, { mimeType: 'audio/webm' });
     mediaRecorder.current = media;
     mediaRecorder.current.start();
     const localAudioChunks: Blob[] = [];

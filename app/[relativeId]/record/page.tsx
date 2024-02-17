@@ -1,6 +1,6 @@
 'use client';
 
-import AudioReactiveCircle from '@/components/audio-reactive-element';
+import AudioVisualizer from '@/components/audio-reaction';
 import { Card } from '@/components/ui/card';
 import { useState, useRef } from 'react';
 
@@ -38,6 +38,7 @@ const Page = ({ params }: Props) => {
       getMicPerm();
       return;
     }
+
     if (!stream) return;
 
     setRecording(true);
@@ -76,7 +77,7 @@ const Page = ({ params }: Props) => {
         {recording ? 'Stop' : 'Record'}
       </button>
       {audio}
-      <AudioReactiveCircle />
+      <AudioVisualizer />
     </div>
   );
 };
@@ -114,7 +115,7 @@ export function RecordButton() {
   );
 }
 
-function PauseIcon(props) {
+function PauseIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

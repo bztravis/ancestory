@@ -1,5 +1,6 @@
 'use client';
 
+import AudioReactiveCircle from '@/components/audio-reactive-element';
 import { Card } from '@/components/ui/card';
 import { useState, useRef } from 'react';
 
@@ -11,9 +12,9 @@ const Page = ({ params }: Props) => {
   const [recording, setRecording] = useState<boolean>(false);
   const [permission, setPermission] = useState<boolean>(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
-  const mediaRecorder = useRef(null);
-  const [audioChunks, setAudioChunks] = useState([]);
-  const [audio, setAudio] = useState(null);
+  const mediaRecorder = useRef<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  const [audio, setAudio] = useState<string | null>(null);
 
   const getMicPerm = async () => {
     if ('MediaRecorder' in window) {
@@ -32,19 +33,36 @@ const Page = ({ params }: Props) => {
     }
   };
 
-  const handleStartRecording = () => {
+  const startRecording = () => {
     if (!permission) {
       getMicPerm();
       return;
     }
+    if (!stream) return;
+
     setRecording(true);
-    // star recording
+    const media = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+    mediaRecorder.current = media;
+    mediaRecorder.current.start();
+    const localAudioChunks: Blob[] = [];
+    mediaRecorder.current.ondataavailable = (event) => {
+      if (typeof event.data === 'undefined') return;
+      if (event.data.size === 0) return;
+      localAudioChunks.push(event.data);
+    };
+    setAudioChunks(localAudioChunks);
   };
 
-  const handleStopRecording = () => {
+  const stopRecording = () => {
     setRecording(false);
-    // end recording
-    // now start transcribing
+    if (!mediaRecorder.current) return;
+    mediaRecorder.current.stop();
+    mediaRecorder.current.onstop = () => {
+      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      setAudio(audioUrl);
+      setAudioChunks([]);
+    };
   };
 
   return (
@@ -52,12 +70,13 @@ const Page = ({ params }: Props) => {
       <h1>record {params.relativeId}</h1>
       <button
         onClick={() => {
-          recording ? handleStopRecording() : handleStartRecording();
+          recording ? stopRecording() : startRecording();
         }}
       >
         {recording ? 'Stop' : 'Record'}
       </button>
-      {/* <RecordButton /> */}
+      {audio}
+      <AudioReactiveCircle />
     </div>
   );
 };
@@ -95,7 +114,25 @@ export function RecordButton() {
   );
 }
 
-function ResumeIcon(props: React.SVGProps<SVGSVGElement>) {}
+function PauseIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns='http://www.w3.org/2000/svg'
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    >
+      <rect width='4' height='16' x='6' y='4' />
+      <rect width='4' height='16' x='14' y='4' />
+    </svg>
+  );
+}
 
 function MicIcon(props: React.SVGProps<SVGSVGElement>) {
   return (

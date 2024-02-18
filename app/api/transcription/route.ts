@@ -28,12 +28,15 @@ export async function POST(request: NextRequest) {
     }
   );
 
-  console.log('result', result);
-  console.log('error', error);
-
-  // console.log(formData);
-  // const formData = await request.json();
-  // console.log(formData);
-
+  console.log(
+    'result',
+    JSON.stringify(
+      result.results.channels[0].alternatives[0].paragraphs.paragraphs
+        .map((paragraph) =>
+          paragraph.sentences.map((sentence) => sentence.text).join(' ')
+        )
+        .join(' ')
+    )
+  );
   return NextResponse.json({ hello: 'world' });
 }

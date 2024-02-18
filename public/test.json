@@ -1,20 +1,65 @@
 {
     "nodes": [ 
         { 
-          "id": "id1",
-          "name": "name1",
-          "val": 1 
+          "id": 1,
+          "name": "Grandma fights in WWII",
+          "val": 10 ,
+          "neighbors": [],
+          "links": []
         },
         { 
-          "id": "id2",
-          "name": "name2",
-          "val": 10 
+          "id": 2,
+          "name": "Grandma participates in D-Day",
+          "val": 10 ,
+          "neighbors": [],
+          "links": []
+        },
+        { 
+          "id": 3,
+          "name": "Grandma meets Grandpa in Paris",
+          "val": 10 ,
+          "neighbors": [],
+          "links": []
+        },
+        { 
+          "id": 4,
+          "name": "Grandma goes home",
+          "val": 10 ,
+          "neighbors": [],
+          "links": []
+        },
+        {
+          "id": 5,
+          "name": "Grandma has a baby",
+          "val": 10 ,
+          "neighbors": [],
+          "links": []
         }
     ],
     "links": [
         {
-            "source": "id1",
-            "target": "id2"
+          "source": 1,
+          "target": 2
+        },
+        {
+          "source": 2,
+          "target": 3
+        },
+        {
+          "source": 3,
+          "target": 4
+        },
+        {
+          "source": 2,
+          "target": 5
+        },
+        {
+          "source": 5,
+          "target": 4
+        },
+        {
+          "source": 4,
+          "target": 1
         }
     ]
-}
+  }

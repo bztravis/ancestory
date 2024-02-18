@@ -68,28 +68,46 @@ const AudioReactiveButton = ({
     : 10; // Ensure a minimum size for visibility
 
   return (
-    <div className='flex justify-center items-center h-screen'>
-      <div className='text-center'>
-        <div
-          onClick={handleClick}
-          className='rounded-full mx-auto flex justify-center items-center cursor-pointer'
-          style={{
-            backgroundImage: `radial-gradient(circle at 50% 50%, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%), 
+    <>
+      <style>
+        {`
+        @keyframes pulseShadow {
+            0%, 100% {
+            box-shadow: 0 0 0px 0px rgba(59, 130, 246, 0.7);
+            }
+            50% {
+            box-shadow: 0 0 15px 15px rgba(59, 130, 246, 0.5);
+            }
+        }
+
+        .hover-pulse-shadow:hover {
+            animation: pulseShadow 3s infinite;
+        }
+        `}
+      </style>
+      <div className='flex justify-center items-center h-screen'>
+        <div className='text-center'>
+          <div
+            onClick={handleClick}
+            className='rounded-full mx-auto flex justify-center items-center cursor-pointer hover:shadow-xl transition-shadow duration-1000 ease-in-out hover-pulse-shadow'
+            style={{
+              backgroundImage: `radial-gradient(circle at 50% 50%, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%), 
                                 radial-gradient(circle at 100% 100%, #ffdde1 0%, #ee9ca7 100%)`,
-            backgroundBlendMode: 'screen',
-            width: `${size}rem`,
-            height: `${size}rem`,
-            transition: 'width 0.05s ease-in-out, height 0.05s ease-in-out',
-          }}
-        >
-          {recording ? (
-            <PauseIcon className='w-16 h-16' />
-          ) : (
-            <MicIcon className='w-16 h-16' />
-          )}
+              backgroundBlendMode: 'screen',
+              width: `${size}rem`,
+              height: `${size}rem`,
+              transition: 'width 0.05s ease-in-out, height 0.05s ease-in-out',
+            }}
+          >
+            {recording ? (
+              <PauseIcon className='w-16 h-16' />
+            ) : (
+              <MicIcon className='w-16 h-16' />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -62,32 +62,31 @@ const Page = ({ params }: Props) => {
       setAudio(audioUrl);
       setAudioChunks([]);
     };
+    transcribeAudio();
   };
 
   const transcribeAudio = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const response = await fetch(audio!);
     const audioBlob = await response.blob();
+    const audioBuffer = await audioBlob.arrayBuffer();
     const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
       // path to the audio file
       // STEP 3: Configure Deepgram options for audio analysis
+      audioBuffer,
       {
         model: 'nova-2',
         smart_format: true,
       }
     );
+    console.log(result, error);
   };
 
   return (
     <div>
-      <h1>record {params.relativeId}</h1>
-      <button
-        onClick={() => {
-          recording ? stopRecording() : startRecording();
-        }}
-      >
-        {recording ? 'Stop' : 'Record'}
-      </button>
+      <h1 className='font-bold text-xl text-center'>
+        Record {params.relativeId}
+      </h1>
       {audio}
       <AudioReactiveElement
         recording={recording}

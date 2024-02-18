@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import OpenAI from 'openai';
 import Instructor from '@instructor-ai/instructor';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 // client
 const togetherai = new OpenAI({
@@ -22,7 +22,7 @@ const StorySchema = z.object({
   summary: z
     .string()
     .describe('A short summary of the story narrated')
-    .max(2000),
+    .max(500),
   year: z.string().describe('The age at which this story took place').max(100),
   place: z.string().describe('The place the story is situated in'),
   characters: z
@@ -31,11 +31,9 @@ const StorySchema = z.object({
 });
 
 // GET genAI response on information extracted from the story
-export async function GET() {
-  console.log('BRUH');
+export async function GET(request: NextRequest) {
   // transcript dummy data
-  const transcript =
-    "The summer after the 10th grade was one of the best summers of my life. I became closer to my best friends - Mahima, Sanaya, and Uthkrisht. I have known Mahima and Sanaya since the 5th grade and Uthkrisht since the 7th grade. We went to Acres Club to play badminton for 2 hours, followed by 1 hour of swimming, tasty spring rolls with sauce, and deep conversations on the way home. We would repeat this routine every single day and never get tired of it. On days when the temperature was very high, we'd play a board game at home instead. They're still my besties and I absolutelu love them.";
+  const transcript = request.nextUrl.searchParams.get('transcript');
 
   // Make the request to the AI
   try {

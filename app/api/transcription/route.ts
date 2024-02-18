@@ -3,30 +3,38 @@ const { createClient } = require('@deepgram/sdk');
 
 const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
 
-export function GET(request: NextRequest) {
+export const runtime = 'experimental-edge';
+
+export async function POST(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   // query is "hello" for /api/search?query=hello
-  const audio;
+  // const audio;
+  const formData = await request.formData();
+  const audio = formData.get('audio');
+  console.log('audio', audio);
 
-  console.log('helo');
-  console.log('searchParams', searchParams);
+  const arrayBuffer = await audio.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
 
-  return NextResponse.json({ hello: 'world' });
-}
+  // console.log('buffer', buffer);
 
-const transcribeAudio = async () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const response = await fetch(audio);
-  const audioBlob = await response.blob();
-  const audioBuffer = await audioBlob.arrayBuffer();
   const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
     // path to the audio file
+    buffer,
     // STEP 3: Configure Deepgram options for audio analysis
-    audioBuffer,
     {
       model: 'nova-2',
       smart_format: true,
     }
   );
-  console.log(result, error);
-};
+
+  const transcript = JSON.stringify(
+    result.results.channels[0].alternatives[0].paragraphs.paragraphs
+      .map((paragraph) =>
+        paragraph.sentences.map((sentence) => sentence.text).join(' ')
+      )
+      .join(' ')
+  );
+
+  return NextResponse.json({ transcript });
+}

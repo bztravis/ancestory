@@ -71,13 +71,18 @@ const AudioReactiveButton = ({
     <>
       <style>
         {`
+        .hover-pulse-shadow {
+            transition: box-shadow 0.5s ease-in-out;
+            box-shadow: 0 0 5px 5px rgba(255, 154, 157, 0.3); 
+        }
         @keyframes pulseShadow {
-            0%, 100% {
-            box-shadow: 0 0 0px 0px rgba(59, 130, 246, 0.7);
-            }
             50% {
-            box-shadow: 0 0 15px 15px rgba(59, 130, 246, 0.5);
+                box-shadow: 0 0 15px 15px rgba(255, 154, 157, 0.3);
+                }
+            0%, 100% {
+            box-shadow: 0 0 5px 5px rgba(255, 154, 157, 0.2);
             }
+            
         }
 
         .hover-pulse-shadow:hover {
@@ -89,13 +94,14 @@ const AudioReactiveButton = ({
         <div className='text-center'>
           <div
             onClick={handleClick}
-            className='rounded-full mx-auto flex justify-center items-center cursor-pointer hover:shadow-xl transition-shadow duration-1000 ease-in-out hover-pulse-shadow'
+            className='rounded-full mx-auto flex justify-center items-center cursor-pointer transition-shadow duration-1000 hover:shadow-xl  ease-in-out hover-pulse-shadow'
             style={{
               backgroundImage: `radial-gradient(circle at 50% 50%, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%), 
                                 radial-gradient(circle at 100% 100%, #ffdde1 0%, #ee9ca7 100%)`,
               backgroundBlendMode: 'screen',
               width: `${size}rem`,
               height: `${size}rem`,
+              boxShadow: '0 0 5px 5px rgba(255, 154, 157, 0.2)',
               transition: 'width 0.05s ease-in-out, height 0.05s ease-in-out',
             }}
           >

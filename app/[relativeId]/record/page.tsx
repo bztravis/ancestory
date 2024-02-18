@@ -1,11 +1,8 @@
 'use client';
 
 import AudioReactiveElement from '@/components/audio-reaction-2';
-const { createClient } = require('@deepgram/sdk');
 import { Card } from '@/components/ui/card';
 import { useState, useRef } from 'react';
-
-const deepgram = createClient(process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY);
 
 type Props = {
   params: { relativeId: string };
@@ -52,7 +49,7 @@ const Page = ({ params }: Props) => {
     setAudioChunks(localAudioChunks);
   };
 
-  const stopRecording = () => {
+  const stopRecording = async () => {
     setRecording(false);
     if (!mediaRecorder.current) return;
     mediaRecorder.current.stop();
@@ -62,24 +59,14 @@ const Page = ({ params }: Props) => {
       setAudio(audioUrl);
       setAudioChunks([]);
     };
-    transcribeAudio();
-  };
-
-  const transcribeAudio = async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const response = await fetch(audio!);
     const audioBlob = await response.blob();
     const audioBuffer = await audioBlob.arrayBuffer();
-    const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
-      // path to the audio file
-      // STEP 3: Configure Deepgram options for audio analysis
-      audioBuffer,
-      {
-        model: 'nova-2',
-        smart_format: true,
-      }
-    );
-    console.log(result, error);
+    console.log('audioBuffer', audioBuffer);
+    fetch('https://webhook.site/6f5d174c-8826-40f2-9f2c-f0cba0587829', {
+      method: 'POST',
+      body: audioBuffer,
+    });
   };
 
   return (

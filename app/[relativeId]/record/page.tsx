@@ -12,7 +12,8 @@ const Page = ({ params }: Props) => {
   const [recording, setRecording] = useState<boolean>(false);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
-  const [audio, setAudio] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [parseData, setParseData] = useState<any>(null);
 
   const getStream = async () => {
     console.log('perm');
@@ -56,7 +57,6 @@ const Page = ({ params }: Props) => {
     mediaRecorder.current.onstop = async () => {
       const audioBlob1 = new Blob(audioChunks, { type: 'audio/webm' });
       audioUrl = URL.createObjectURL(audioBlob1);
-      setAudio(audioUrl);
       setAudioChunks([]);
 
       console.log('audioUrl', audioUrl);
@@ -75,25 +75,33 @@ const Page = ({ params }: Props) => {
       const { transcript } = await res.json();
       console.log('transcript', transcript);
 
+      setLoading(true);
       const url = new URL('http://localhost:3000/api/parse');
       url.searchParams.append('transcript', transcript);
       const parseRes = await fetch(url);
       const parseData = await parseRes.json();
       console.log('parseData', parseData);
+      setParseData(parseData);
+      setLoading(false);
     };
     mediaRecorder.current.stop();
   };
 
   return (
     <div>
-      <h1 className='font-bold text-xl text-center'>
-        Record {params.relativeId}
-      </h1>
-      {audio}
-      <AudioReactiveElement
-        recording={recording}
-        handleClick={handleRecordButtonClick}
-      />
+      {!parseData ? (
+        <>
+          <h1 className='font-bold text-xl text-center'>
+            Record {params.relativeId}
+          </h1>
+          <AudioReactiveElement
+            recording={recording}
+            handleClick={handleRecordButtonClick}
+          />
+        </>
+      ) : (
+        <div>{JSON.stringify(parseData)}</div>
+      )}
     </div>
   );
 

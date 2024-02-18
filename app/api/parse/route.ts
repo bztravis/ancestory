@@ -61,7 +61,7 @@ export async function GET() {
     });
     // print the response
     // console.log(response);
-    return NextResponse.json({ response });
+    return NextResponse.json({ ...response });
   } catch (error) {
     console.log('Failed to extract information from the transcript:', error);
     throw error;

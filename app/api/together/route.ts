@@ -31,9 +31,10 @@ const StorySchema = z.object({
 
 export async function GET() {
   // transcript dummy data
+  //const transcript =
+  // "The 10th grade was one of my best years of my life. I became even closer with my best friends Mahima, Sanaya, Uthkrisht ";
   const transcript =
-    "The 10th grade was one of my best years of my life. I became even closer with my best friends Mahima, Sanaya, Uthkrisht ";
-
+    "I'm at TreeHacks with Brian and Johnathan. I really like the project idea but we're all sooo exhausted. I want to go home sleep do nothing and chill. I miss cuddles. I need help.";
   // Make the request to the AI
   try {
     const response = await client.chat.completions.create({

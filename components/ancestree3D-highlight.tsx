@@ -1,51 +1,51 @@
 // @ts-nocheck
 
-import React from "react";
-import dynamic from "next/dynamic";
-import { useRef, useEffect, useCallback, useState, useMemo } from "react";
-import SpriteText from "three-spritetext";
+import React from 'react';
+import dynamic from 'next/dynamic';
+import { useRef, useEffect, useCallback, useState, useMemo } from 'react';
+import SpriteText from 'three-spritetext';
 import ForceGraph3D, {
   GraphData,
   ForceGraphMethods,
-} from "react-force-graph-3d";
-import StoryDrawer from "./story-drawer";
-import NodeDrawer from "./node-drawer";
+} from 'react-force-graph-3d';
+import StoryDrawer from './story-drawer';
+import NodeDrawer from './node-drawer';
 
 // TODO: add type for node maybe?
 
-const myData = {
+export const myData = {
   nodes: [
     {
       id: 1,
-      name: "Grandma fights in WWII",
+      name: 'Grandma fights in WWII',
       val: 10,
       neighbors: [],
       links: [],
     },
     {
       id: 2,
-      name: "Grandma participates in D-Day",
+      name: 'Grandma participates in D-Day',
       val: 10,
       neighbors: [],
       links: [],
     },
     {
       id: 3,
-      name: "Grandma meets Grandpa in Paris",
+      name: 'Grandma meets Grandpa in Paris',
       val: 10,
       neighbors: [],
       links: [],
     },
     {
       id: 4,
-      name: "Grandma goes home",
+      name: 'Grandma goes home',
       val: 10,
       neighbors: [],
       links: [],
     },
     {
       id: 5,
-      name: "Grandma has a baby",
+      name: 'Grandma has a baby',
       val: 10,
       neighbors: [],
       links: [],
@@ -91,11 +91,11 @@ const Graph = () => {
 
   useEffect(() => {
     // Fetch the graph data
-    fetch("/test.json") // Adjust the dataset path according to your project structure
+    fetch('/test.json') // Adjust the dataset path according to your project structure
       .then((res) => res.json())
       .then((data) => {
         setGraphData(data);
-        console.log("dALKSDLAJFLKJASDLKFJASLKFJASLKJF", data);
+        console.log('dALKSDLAJFLKJASDLKFJASLKFJASLKJF', data);
       });
   }, []);
 
@@ -118,7 +118,7 @@ const Graph = () => {
       }
     });
 
-    console.log("gData", gData);
+    console.log('gData', gData);
     return gData;
   }, []);
 
@@ -145,7 +145,7 @@ const Graph = () => {
     highlightLinks.clear();
 
     if (link) {
-      console.log("hovered link: ,", link);
+      console.log('hovered link: ,', link);
       highlightLinks.add(link);
       highlightNodes.add(link.source);
       highlightNodes.add(link.target);
@@ -159,7 +159,7 @@ const Graph = () => {
       // add ring just for highlighted nodes
       ctx.beginPath();
       ctx.arc(node.x, node.y, NODE_R * 1.4, 0, 2 * Math.PI, false);
-      ctx.fillStyle = node === hoverNode ? "red" : "orange";
+      ctx.fillStyle = node === hoverNode ? 'red' : 'orange';
       ctx.fill();
     },
     [hoverNode]
@@ -188,15 +188,15 @@ const Graph = () => {
 
   return (
     <>
-      <div id="graph" className="w-full h-screen">
+      <div id='graph' className='w-full h-screen'>
         <NodeDrawer
           nodeTitle={
             myData.nodes.filter((node) => selectedNode?.id === node.id)[0]?.name
           }
-          nodeSummary="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Leo a diam sollicitudin tempor id eu. Tristique senectus et netus et. Ultricies mi eget mauris pharetra et ultrices neque ornare aenean. Vitae et leo duis ut diam. At quis risus sed vulputate odio ut enim blandit volutpat. Suspendisse potenti nullam ac tortor vitae purus faucibus. Cursus metus aliquam eleifend mi in nulla. Commodo nulla facilisi nullam vehicula ipsum. Nam at lectus urna duis convallis convallis. Convallis posuere morbi leo urna molestie. Sed vulputate odio ut enim blandit volutpat maecenas. Maecenas ultricies mi eget mauris pharetra et. Ornare quam viverra orci sagittis. Nisl condimentum id venenatis a condimentum vitae sapien. Proin sagittis nisl rhoncus mattis rhoncus urna. Integer malesuada nunc vel risus commodo viverra maecenas accumsan. Egestas sed tempus urna et. Sit amet massa vitae tortor condimentum lacinia."
-          nodeCharacters={["Character 1", "Character 2"]}
-          nodeDate="2021-12-12"
-          nodeLocation="Paris"
+          nodeSummary='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Leo a diam sollicitudin tempor id eu. Tristique senectus et netus et. Ultricies mi eget mauris pharetra et ultrices neque ornare aenean. Vitae et leo duis ut diam. At quis risus sed vulputate odio ut enim blandit volutpat. Suspendisse potenti nullam ac tortor vitae purus faucibus. Cursus metus aliquam eleifend mi in nulla. Commodo nulla facilisi nullam vehicula ipsum. Nam at lectus urna duis convallis convallis. Convallis posuere morbi leo urna molestie. Sed vulputate odio ut enim blandit volutpat maecenas. Maecenas ultricies mi eget mauris pharetra et. Ornare quam viverra orci sagittis. Nisl condimentum id venenatis a condimentum vitae sapien. Proin sagittis nisl rhoncus mattis rhoncus urna. Integer malesuada nunc vel risus commodo viverra maecenas accumsan. Egestas sed tempus urna et. Sit amet massa vitae tortor condimentum lacinia.'
+          nodeCharacters={['Character 1', 'Character 2']}
+          nodeDate='2021-12-12'
+          nodeLocation='Paris'
           isOpen={selectedNode !== null}
           onClose={() => setSelectedNode(null)}
         />
@@ -222,15 +222,15 @@ const Graph = () => {
           }
           onNodeHover={handleNodeHover}
           onLinkHover={handleLinkHover}
-          nodeLabel="id"
-          nodeAutoColorBy="group"
+          nodeLabel='id'
+          nodeAutoColorBy='group'
           nodeCanvasObjectMode={(node) =>
-            highlightNodes.has(node) ? "before" : undefined
+            highlightNodes.has(node) ? 'before' : undefined
           }
           nodeCanvasObject={paintRing}
           onNodeClick={handleClick}
           nodeThreeObject={(node) => {
-            const sprite = new SpriteText(node.name?.toString() || "");
+            const sprite = new SpriteText(node.name?.toString() || '');
             sprite.color = node.color;
             sprite.textHeight = 4;
             return sprite;

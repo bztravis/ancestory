@@ -3,6 +3,8 @@
 import AudioReactiveElement from '@/components/audio-reaction-2';
 import { Card } from '@/components/ui/card';
 import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import useLocalStorage from '@/hooks/useLocalStorage';
 
 type Props = {
   params: { relativeId: string };
@@ -14,6 +16,13 @@ const Page = ({ params }: Props) => {
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [parseData, setParseData] = useState<any>(null);
+
+  const [setItem, getItem, removeItem] = useLocalStorage('stories', {
+    nodes: [],
+    links: [],
+  });
+
+  const router = useRouter();
 
   const getStream = async () => {
     console.log('perm');
@@ -109,7 +118,42 @@ const Page = ({ params }: Props) => {
           />
         </>
       ) : (
-        <div>{JSON.stringify(parseData)}</div>
+        <div className='m-[100px] flex flex-col justify-center items-center gap-4'>
+          <h1 className='text-lg font-bold'>{`${params.relativeId}'s Story:`}</h1>
+          <p>{`${parseData.title}`}</p>
+          <p>{`${parseData.time}`}</p>
+          <p>{`${parseData.place}`}</p>
+          <p>{`Summary: ${parseData.summary}`}</p>
+          <button
+            onClick={() => {
+              const prev = getItem();
+              const newNode = {
+                id: prev.nodes.length,
+                name: parseData.title,
+                val: 10,
+                neighbors: [],
+                links: [],
+              };
+              const randomIds = getRandomIdsInRange(
+                0,
+                prev.nodes.length - 1,
+                3
+              );
+              const newLinks = randomIds.map((id) => ({
+                source: newNode.id,
+                target: id,
+              }));
+              console.log('newLinks', newLinks);
+              setItem({
+                nodes: [...prev.nodes, newNode],
+                links: [...prev.links, ...newLinks],
+              });
+              router.push(`/${params.relativeId}`);
+            }}
+          >
+            Continue
+          </button>
+        </div>
       )}
     </div>
   );
@@ -119,5 +163,16 @@ const Page = ({ params }: Props) => {
     else startRecording();
   }
 };
+
+function getRandomIdsInRange(min, max, count) {
+  const randomIds = [];
+  while (randomIds.length < count) {
+    const randomId = Math.floor(Math.random() * (max - min + 1)) + min;
+    if (randomIds.indexOf(randomId) === -1) {
+      randomIds.push(randomId);
+    }
+  }
+  return randomIds;
+}
 
 export default Page;

@@ -72,8 +72,14 @@ const Page = ({ params }: Props) => {
         method: 'POST',
         body: formData,
       });
-      const data = await res.json();
-      console.log(data);
+      const { transcript } = await res.json();
+      console.log('transcript', transcript);
+
+      const url = new URL('http://localhost:3000/api/parse');
+      url.searchParams.append('transcript', transcript);
+      const parseRes = await fetch(url);
+      const parseData = await parseRes.json();
+      console.log('parseData', parseData);
     };
     mediaRecorder.current.stop();
   };

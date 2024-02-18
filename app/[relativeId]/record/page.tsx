@@ -52,23 +52,28 @@ const Page = ({ params }: Props) => {
   const stopRecording = async () => {
     setRecording(false);
     if (!mediaRecorder.current) return;
-    mediaRecorder.current.stop();
-    mediaRecorder.current.onstop = () => {
-      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-      const audioUrl = URL.createObjectURL(audioBlob);
+    let audioUrl = null;
+    mediaRecorder.current.onstop = async () => {
+      const audioBlob1 = new Blob(audioChunks, { type: 'audio/webm' });
+      audioUrl = URL.createObjectURL(audioBlob1);
       setAudio(audioUrl);
       setAudioChunks([]);
-    };
-    const response = await fetch(audio!);
-    const audioBlob = await response.blob();
-    const formData = new FormData();
-    formData.append('audio', audioBlob);
-    console.log(audioBlob);
 
-    fetch('/api/transcription', {
-      method: 'POST',
-      body: formData,
-    });
+      console.log('audioUrl', audioUrl);
+
+      const response = await fetch(`${audioUrl}`);
+      const audioBlob = await response.blob();
+      const formData = new FormData();
+      formData.append('audio', audioBlob);
+      formData.append('url', `blob:${audioUrl}`);
+      console.log('audioBlob', audioBlob);
+
+      fetch('/api/transcription', {
+        method: 'POST',
+        body: formData,
+      });
+    };
+    mediaRecorder.current.stop();
   };
 
   return (

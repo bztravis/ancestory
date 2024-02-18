@@ -16,6 +16,8 @@ export async function POST(request: NextRequest) {
   const arrayBuffer = await audio.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
+  // console.log('buffer', buffer);
+
   const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
     // path to the audio file
     buffer,
@@ -35,20 +37,3 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ hello: 'world' });
 }
-
-const transcribeAudio = async () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const response = await fetch(audio);
-  const audioBlob = await response.blob();
-  const audioBuffer = await audioBlob.arrayBuffer();
-  const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
-    // path to the audio file
-    // STEP 3: Configure Deepgram options for audio analysis
-    audioBuffer,
-    {
-      model: 'nova-2',
-      smart_format: true,
-    }
-  );
-  console.log(result, error);
-};

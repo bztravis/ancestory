@@ -16,13 +16,14 @@ const client = Instructor({
 });
 
 // Schema for information retrieval from transcript
+// TODO: character limit on title depending on the css of the graph
 const StorySchema = z.object({
   title: z.string().describe("A short descriptive title of the story."),
   summary: z
     .string()
     .describe("A short summary of the story narrated")
-    .max(1000),
-  year: z.string().describe("The year the story took place").max(100),
+    .max(2000),
+  year: z.string().describe("The age at which this story took place").max(100),
   place: z.string().describe("The place the story is situated in"),
   characters: z
     .array(z.string())
@@ -41,7 +42,7 @@ export async function GET() {
         {
           role: "system",
           content:
-            "The following is a transcript of an audio recording between an individual and their older family member. This audio recording is a story being shared by the older family member. Extract a title, a summary, and a list of characters (names of people) mentioned in the story. Return it as a JSON object in this format: {title: string, summary: string, characters: [string, string, string, ...]}  ",
+            "The following is a transcript of an audio recording between an individual and their older family member. This audio recording is a story being shared by the older family member. Extract a title, a summary, and a list of characters (names of people) mentioned in the story. Return it as a JSON object in this format: {title: string, summary: string, characters: [string, string, string, ...]} For any field you didn't get data for from the audio, put the response as 'N/A' in a string. Make sure the 'speaker' is featured as a character in every story narrated. ",
         },
         {
           role: "user",

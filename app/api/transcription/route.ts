@@ -28,15 +28,13 @@ export async function POST(request: NextRequest) {
     }
   );
 
-  console.log(
-    'result',
-    JSON.stringify(
-      result.results.channels[0].alternatives[0].paragraphs.paragraphs
-        .map((paragraph) =>
-          paragraph.sentences.map((sentence) => sentence.text).join(' ')
-        )
-        .join(' ')
-    )
+  const transcript = JSON.stringify(
+    result.results.channels[0].alternatives[0].paragraphs.paragraphs
+      .map((paragraph) =>
+        paragraph.sentences.map((sentence) => sentence.text).join(' ')
+      )
+      .join(' ')
   );
-  return NextResponse.json({ hello: 'world' });
+
+  return NextResponse.json({ transcript });
 }

@@ -68,10 +68,12 @@ const Page = ({ params }: Props) => {
       formData.append('url', `blob:${audioUrl}`);
       console.log('audioBlob', audioBlob);
 
-      fetch('/api/transcription', {
+      const res = await fetch('/api/transcription', {
         method: 'POST',
         body: formData,
       });
+      const data = await res.json();
+      console.log(data);
     };
     mediaRecorder.current.stop();
   };

@@ -30,6 +30,7 @@ const StorySchema = z.object({
     .describe("A list of unique names of characters mentioned in the story"),
 });
 
+// GET genAI response on information extracted from the story
 export async function GET() {
   // transcript dummy data
   const transcript =

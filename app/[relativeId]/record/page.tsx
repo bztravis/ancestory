@@ -89,7 +89,16 @@ const Page = ({ params }: Props) => {
 
   return (
     <div>
-      {!parseData ? (
+      {loading ? (
+        <p className='w-screen h-screen flex justify-center items-center'>
+          Loading...
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src='https://i.gifer.com/origin/34/34338d26023e5515f6cc8969aa027bca.gif'
+            alt='loading'
+          />
+        </p>
+      ) : !parseData ? (
         <>
           <h1 className='font-bold text-xl text-center'>
             Record {params.relativeId}

@@ -61,11 +61,13 @@ const Page = ({ params }: Props) => {
     };
     const response = await fetch(audio!);
     const audioBlob = await response.blob();
-    const audioBuffer = await audioBlob.arrayBuffer();
-    console.log('audioBuffer', audioBuffer);
-    fetch('https://webhook.site/6f5d174c-8826-40f2-9f2c-f0cba0587829', {
+    const formData = new FormData();
+    formData.append('audio', audioBlob);
+    console.log(audioBlob);
+
+    fetch('/api/transcription', {
       method: 'POST',
-      body: audioBuffer,
+      body: formData,
     });
   };
 
